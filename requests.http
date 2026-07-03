@@ -1,0 +1,154 @@
+@host=http://127.0.0.1:8000
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzgzMDI0OTM3LCJpYXQiOjE3ODMwMjEzMzcsImp0aSI6ImYwY2NkODI5NjM0MjRiYTVhOWNjMjE1YTFhM2YyNmQxIiwidXNlcl9pZCI6IjcifQ.EEePfpA6INRpRsI4Bn_AN6e47b36MszFWEsyAA9uC7A
+
+####################################################
+### PRODUCTS
+####################################################
+
+###
+GET {{host}}/api/products/
+
+###
+GET {{host}}/api/products/featured/
+
+###
+GET {{host}}/api/products/categories/
+
+###
+GET {{host}}/api/products/rose-quartz-bracelet/
+
+
+####################################################
+### AUTH
+####################################################
+
+###
+POST {{host}}/api/auth/register/
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@test.com",
+  "password": "Test12345"
+}
+
+###
+POST {{host}}/api/auth/login/
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "Test12345"
+}
+
+####################################################
+### WISHLIST
+####################################################
+
+###
+GET {{host}}/api/wishlist/
+Authorization: Bearer {{token}}
+
+###
+POST {{host}}/api/wishlist/add/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "product_id": 1
+}
+
+###
+DELETE {{host}}/api/wishlist/remove/1/
+Authorization: Bearer {{token}}
+
+
+####################################################
+### CART
+####################################################
+
+###
+GET {{host}}/api/cart/
+Authorization: Bearer {{token}}
+
+###
+POST {{host}}/api/cart/add/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "product_id": 1,
+  "quantity": 2
+}
+
+###
+PATCH {{host}}/api/cart/update/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "product_id": 1,
+  "quantity": 5
+}
+
+###
+DELETE {{host}}/api/cart/remove/1/
+Authorization: Bearer {{token}}
+
+###
+DELETE {{host}}/api/cart/clear/
+Authorization: Bearer {{token}}
+
+####################################################
+### SHIPPING ADDRESS
+####################################################
+
+###
+POST {{host}}/api/orders/addresses/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "full_name": "Maryam Irfan",
+  "phone": "+358401234567",
+  "country": "Finland",
+  "city": "Jyväskylä",
+  "postal_code": "40100",
+  "street_address": "Keskuskatu 10",
+  "apartment": "A 12",
+  "is_default": true
+}
+
+###
+GET {{host}}/api/orders/addresses/
+Authorization: Bearer {{token}}
+
+####################################################
+### CHECKOUT
+####################################################
+
+###
+GET {{host}}/api/orders/checkout/
+Authorization: Bearer {{token}}
+
+####################################################
+### PLACE ORDER
+####################################################
+
+###
+POST {{host}}/api/orders/place/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "shipping_address_id": 1
+}
+
+
+####################################################
+### MY ORDERS
+####################################################
+
+###
+GET {{host}}/api/orders/
+Authorization: Bearer {{token}}
