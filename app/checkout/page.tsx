@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
+import { useEffect } from 'react';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { cartTotals, useCart } from '@/lib/cart-store';
 import { getAccessToken, useCurrentUser } from '@/lib/auth-store';
@@ -26,12 +27,17 @@ export default function CheckoutPage() {
     apartment: '',
   });
 
+  useEffect(() => {
+  if (!user) {
+    router.push('/login');
+  }
+}, [user, router]);
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [placing, setPlacing] = useState(false);
 
   if (!user) {
-    router.push('/login');
     return null;
   }
 

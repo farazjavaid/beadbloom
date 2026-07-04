@@ -18,7 +18,6 @@ type AuthState = {
   access: string | null;
   refresh: string | null;
   user: PublicUser | null;
-
   signup: (data: { name: string; email: string; password: string }) => Promise<{ ok: true } | { ok: false; error: string }>;
   login: (data: { email: string; password: string }) => Promise<{ ok: true } | { ok: false; error: string }>;
   logout: () => void;
@@ -31,7 +30,7 @@ export const useAuth = create<AuthState>()(
       refresh: null,
       user: null,
 
-      signup: async ({ name, email, password }) => {
+      signup: async ({ email, password }) => {
         try {
           const username = email.trim().toLowerCase();
 
@@ -39,18 +38,43 @@ export const useAuth = create<AuthState>()(
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-            username,
-            email: username,
-            password,
-          }),
-                    });
+              username,
+              email: username,
+              password,
+            }),
+          });
 
           if (!res.ok) {
             const data = await res.json();
-            return { ok: false, error: data.username?.[0] || data.email?.[0] || data.password?.[0] || 'Signup failed' };
+            return {
+              ok: false,
+              error:
+                data.username?.[0] ||
+                data.email?.[0] ||
+                data.password?.[0] ||
+                'Signup failed',
+            };
           }
 
-          return await useAuth.getState().login({ email: username, password });
+          const loginRes = await fetch(`${API_BASE_URL}/api/auth/login/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: username, password }),
+          });
+
+          if (!loginRes.ok) {
+            return { ok: false, error: 'Account created, but login failed' };
+          }
+
+          const loginData = await loginRes.json();
+
+          set({
+            access: loginData.access,
+            refresh: loginData.refresh,
+            user: loginData.user,
+          });
+
+          return { ok: true };
         } catch {
           return { ok: false, error: 'Could not connect to server' };
         }
@@ -63,7 +87,7 @@ export const useAuth = create<AuthState>()(
           const res = await fetch(`${API_BASE_URL}/api/auth/login/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: username, password, }),
+            body: JSON.stringify({ email: username, password }),
           });
 
           if (!res.ok) {
@@ -72,18 +96,10 @@ export const useAuth = create<AuthState>()(
 
           const data = await res.json();
 
-          const profileRes = await fetch(`${API_BASE_URL}/api/auth/profile/`, {
-            headers: {
-              Authorization: `Bearer ${data.access}`,
-            },
-          });
-
-          const user = profileRes.ok ? await profileRes.json() : null;
-
           set({
             access: data.access,
             refresh: data.refresh,
-            user,
+            user: data.user,
           });
 
           return { ok: true };
@@ -104,7 +120,7 @@ export const useAuth = create<AuthState>()(
 );
 
 export function useCurrentUser(): PublicUser | null {
-  return useAuth((s) => s.user);
+  return useAuth((s: AuthState) => s.user);
 }
 
 export function getAccessToken() {

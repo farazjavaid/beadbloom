@@ -1,9 +1,10 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle2, ShoppingBag } from 'lucide-react';
 
-export default function OrderSuccessPage() {
+function OrderSuccessContent() {
   const router = useRouter();
   const params = useSearchParams();
   const orderNumber = params.get('order');
@@ -19,8 +20,7 @@ export default function OrderSuccessPage() {
 
         {orderNumber && (
           <p className="mt-3 text-sm text-muted">
-            Your order number is{' '}
-            <span className="font-semibold text-ink">{orderNumber}</span>
+            Your order number is <span className="font-semibold text-ink">{orderNumber}</span>
           </p>
         )}
 
@@ -34,5 +34,13 @@ export default function OrderSuccessPage() {
         </button>
       </div>
     </main>
+  );
+}
+
+export default function OrderSuccessPage() {
+  return (
+    <Suspense fallback={null}>
+      <OrderSuccessContent />
+    </Suspense>
   );
 }
