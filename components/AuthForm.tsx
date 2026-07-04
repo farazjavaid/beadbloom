@@ -10,8 +10,8 @@ type Mode = 'login' | 'signup';
 
 export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
-  const signup = useAuth((s) => s.signup);
-  const login = useAuth((s) => s.login);
+  const signup = useAuth((s: any) => s.signup);
+  const login = useAuth((s: any) => s.login);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
