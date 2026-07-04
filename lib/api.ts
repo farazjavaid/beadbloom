@@ -18,7 +18,9 @@ export async function getProducts() {
     description: p.short_description || p.description,
     price: Number(p.final_price || p.price),
     category: p.category?.slug,
-    image: p.main_image || '/images/cover1.jpg',
+    image: p.main_image
+  ? `${API_BASE_URL}${p.main_image}`
+  : '/images/cover1.jpg',
     badge: p.badge || undefined,
   }));
 }

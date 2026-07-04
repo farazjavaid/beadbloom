@@ -147,7 +147,7 @@ export default function CheckoutPage() {
           )}
 
           <button
-            disabled={placing || success || items.length === 0}
+            disabled={placing || Boolean(success) || items.length === 0}
             className="btn-primary mt-6 w-full"
           >
             {placing ? 'Placing order…' : 'Place order'}
