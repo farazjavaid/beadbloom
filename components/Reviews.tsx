@@ -50,7 +50,12 @@ export function Reviews() {
     if (!user || text.trim().length < 8) return;
     setSubmitting(true);
     await new Promise((r) => setTimeout(r, 500));
-    add({ userId: user.id, name: user.name, rating, text: text.trim() });
+    add({
+userId: String(user.id),
+name: user.username || user.email || 'User',
+rating,
+text: text.trim(),
+});
     setSubmitting(false);
     setSent(true);
     setTimeout(() => {
