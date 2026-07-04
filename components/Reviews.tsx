@@ -172,7 +172,9 @@ text: text.trim(),
                   </span>
                   <div>
                     <h3 className="font-display text-xl font-bold">Share your experience</h3>
-                    <p className="text-xs text-muted">Posting as {user?.name}</p>
+                    <p className="text-xs text-muted">
+                        Posting as {user?.username || user?.email}
+                    </p>
                   </div>
                 </div>
                 <form onSubmit={onSubmit} className="space-y-4">
