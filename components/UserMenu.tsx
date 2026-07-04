@@ -21,7 +21,7 @@ function pickGradient(name?: string) {
 
 export function UserMenu() {
   const user = useCurrentUser();
-  const logout = useAuth((s) => s.logout);
+  const logout = useAuth((s: any) => s.logout);
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
